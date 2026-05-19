@@ -7,12 +7,24 @@ class HomeScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useEffect(
-      () => () {
-        ApiCall.getMyPackages();
-      },
-      const [],
+    final counter = useState<int>(0);
+    useEffect(() {
+      ApiCall.getMyPackages();
+      return;
+    }, []);
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          counter.value++;
+        },
+      ),
+      body: Center(child: Text(counter.value.toString())),
     );
-    return Scaffold();
   }
 }
+
+/* Api Calls In UseEffect 
+   -  []   => Call Api One Time 
+   -  null => Call Api In Every Build
+   - [val] => Call Api When val Change
+*/

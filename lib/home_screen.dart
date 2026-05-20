@@ -1,13 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_hooks_application/api_call.dart';
+import 'package:flutter_hooks_application/custom_text_form_filed.dart';
 
 class HomeScreen extends HookWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = useTextEditingController();
     final counter = useState<int>(0);
+    final isObsecure = useState<bool>(true);
     useEffect(() {
       ApiCall.getMyPackages();
       return;
@@ -18,7 +23,28 @@ class HomeScreen extends HookWidget {
           counter.value++;
         },
       ),
-      body: Center(child: Text(counter.value.toString())),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+        child: Column(
+          spacing: 20,
+          children: [
+            Text(counter.value.toString()),
+            Text(controller.value.text),
+            CustomTextFormField(
+              controller: controller,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  isObsecure.value = !isObsecure.value;
+                  log("${isObsecure.value}");
+                },
+                icon: isObsecure.value
+                    ? const Icon(Icons.visibility_off)
+                    : const Icon(Icons.visibility),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
